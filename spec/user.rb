@@ -6,6 +6,7 @@ require '~/Desktop/ruby/board_db/user'
 describe User do
   let(:client) { Mysql2::Client.new(:host => "localhost", :username => "root", :database => "board") }
   let(:user) { User.new({name: 'Smith', date_of_birth: '1995.12.01', phone_number: 124578}) }
+  let(:user2) { User.new({name: 'Johnson', date_of_birth: '1989.11.05', phone_number: 986532}) }
 
   describe "#save" do
     it "should save users" do
@@ -60,7 +61,6 @@ describe User do
   describe ".all" do
     it "should return all table data" do
       client.query("DELETE FROM users")
-      user2 = User.new({name: 'Johnson', date_of_birth: '1989.11.05', phone_number: 986532})
       user.save
       user2.save
       User.all.map(&:id).should == [user.id, user2.id]
@@ -80,6 +80,13 @@ describe User do
       ad = user.create_ad(title: 'English', text: 'Do you work with beginners?')
       added_ad = client.query("SELECT * FROM advertisements ORDER BY id DESC LIMIT 1").to_a
       added_ad[0].equal_values?(ad).should == true
+    end
+  end
+
+  describe ".count" do
+    it "should return number of users" do
+      count = client.query("SELECT COUNT(*) FROM users").to_a
+      User.count.should == count[0]["COUNT(*)"]
     end
   end
 end

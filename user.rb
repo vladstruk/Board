@@ -68,4 +68,9 @@ class User
     Ad.new({id: @@client.last_id, title: params[:title], text: params[:text], user_id: id})
   end
 
+  def self.count
+    #@@client.query("SELECT * FROM users").count
+    @@client.query("SELECT COUNT(*) count FROM users").to_a[0]['count']
+  end
+
 end
