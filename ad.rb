@@ -3,7 +3,7 @@ require 'mysql2'
 require '~/Desktop/ruby/board_db/hash'
 
 class Ad
-	@@client = Mysql2::Client.new(:host => "localhost", :username => "root", :database => "board")
+  @@client = Mysql2::Client.new(:host => "localhost", :username => "root", :database => "board")
   def initialize data
     @id = data[:id]
     @title = data[:title]
@@ -12,18 +12,18 @@ class Ad
   end
 
   def id
-  	@id	
+    @id
   end
 
   def title
-  	@title	
+    @title
   end
 
   def text
-  	@text
+    @text
   end
 
   def user_id
-  	@user_id
+    @user_id
   end
 end
