@@ -22,4 +22,6 @@ describe Ad do
       result1[0]["user_id"].should == result2[0]["user_id"]
     end
   end
+
+
 end

@@ -1,6 +1,5 @@
 require 'pry'
 
-require '~/Desktop/ruby/board_db/hash'
 require '~/Desktop/ruby/board_db/user'
 
 describe User do
@@ -11,41 +10,35 @@ describe User do
   describe "#save" do
     it "should save users" do
       user.save
-      result = client.query("SELECT * FROM users WHERE id = #{user.id}").to_a
-
-      result[0]['id'].should == user.id
-      result[0]['name'].should == user.name
-      result[0]['date_of_birth'].should == DateTime.strptime(user.date_of_birth, "%Y.%m.%d")
-      result[0]['phone_number'].should == user.phone_number
-
+      reloaded_user = User.find_by_id(user.id)
+      user.equal_database_values?(reloaded_user).should be_truthy
     end
 
     it "should return only one user" do
-      count = client.query("SELECT * FROM users").count
+      count = User.count
       user.save
-      client.query("SELECT * FROM users").count.should == count + 1
+      User.count.should == count + 1
     end
   end
 
   describe "#saved?" do
     it "should return true if object is saved" do
       user.save
-      user.saved?.should == true
+      user.saved?.should be_truthy
     end
 
     it "should return false if object is not saved" do
-      user.saved?.should == false
+      user.saved?.should be_falsey
     end
   end
 
   describe "#update" do
     it "should update table" do
       user.save
-      result1 = client.query("SELECT * FROM users WHERE id = #{user.id}").to_a
-      user.update date_of_birth: '2003.05.14', phone_number: 123
-      result2 = client.query("SELECT * FROM users WHERE id = #{user.id}").to_a
-      result1.should_not == result2
-      result1[0][:name].should == result2[0][:name]
+      user.update date_of_birth: '2003.05.14', phone_number: 1234
+      changed_user = User.find_by_id(user.id)
+
+      user.change_database_values?(changed_user, ["date_of_birth", "phone_number"]).should be_truthy
     end
   end
 
@@ -85,8 +78,22 @@ describe User do
 
   describe ".count" do
     it "should return number of users" do
-      count = client.query("SELECT COUNT(*) FROM users").to_a
-      User.count.should == count[0]["COUNT(*)"]
+      client.query("DELETE FROM users")
+      User.count.should be_zero
+      user.save
+      user2.save
+      User.count.should == 2
+    end
+  end
+
+  describe ".database_attrs" do
+    it "should" do
+      User.remove_class_variable(:@@database_attrs)
+      client = User.client
+      
+      expect(client).to receive(:query).once
+      User.database_attrs
+      User.database_attrs
     end
   end
 end

@@ -32,4 +32,8 @@ class Ad
     changing_attrs = params.map { |k, v| "#{k} = '#{v}'" }.join(', ')
     @@client.query("UPDATE advertisements SET #{changing_attrs} WHERE id = #{id} ")
   end
+
 end
+
+
+
