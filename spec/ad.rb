@@ -1,27 +1,42 @@
 require 'pry'
 
-require '~/Desktop/ruby/board_db/hash'
 require '~/Desktop/ruby/board_db/user'
 require '~/Desktop/ruby/board_db/ad'
 
 describe Ad do
+
+  let(:client) { Mysql2::Client.new(:host => "localhost", :username => "root", :database => "board") }
+  let(:user) { User.new({name: 'Smith', date_of_birth: '1995.12.01', phone_number: 124578}) }
+
   describe "#update" do
     it "should update table" do
-      client = Mysql2::Client.new(:host => "localhost", :username => "root", :database => "board")
-      user = User.new(name: 'Smith', date_of_birth: '1995.12.01', phone_number: 124578)
       user.save
-
-      ad = user.create_ad title: 'English', text: 'Do you teach children?'
-      result1 = client.query("SELECT * FROM advertisements WHERE id = #{ad.id}").to_a
+      ad = user.create_ad title: 'English', text: 'Do you teach children?', creating_day: '2015.02.01' 
       ad.update title: 'French', text: 'Do you teach beginners?'
-      result2 = client.query("SELECT * FROM advertisements WHERE id = #{ad.id}").to_a
-
-      result1[0]["id"].should == result2[0]["id"]
-      result2[0]["title"].should == 'French'
-      result2[0]["text"].should == 'Do you teach beginners?'
-      result1[0]["user_id"].should == result2[0]["user_id"]
+      changed_ad = Ad.find_by_id(ad.id)
+      ad.changed_database_values?(changed_ad, ["title", "text"]).should be_truthy
     end
   end
 
+  describe ".sort_by_fields" do
+    it "should return ads sorted by fields" do
+      client.query("DELETE FROM ads")
+      user.save
+      ad = user.create_ad title: 'English', text: 'Do you teach children?', creating_day: '2015.03.01'
+      ad2 = user.create_ad title: 'French', text: 'Do you teach beginners?', creating_day: '2015.04.27'
+      ad3 = user.create_ad title: 'English', text: 'Do you teach beginners?', creating_day: '2015.05.04'
+      Ad.sort_by_fields([:title, :text]).equal_items?([ad3, ad, ad2]).should be_truthy
+    end
+  end
 
+  describe ".created_last_week" do
+    it "should return ads written during last week" do
+      client.query("DELETE FROM ads")
+      user.save
+      ad = user.create_ad title: 'English', text: 'Do you teach children?', creating_day: '2015.03.01'
+      ad2 = user.create_ad title: 'French', text: 'Do you teach beginners?', creating_day: '2015.04.27'
+      ad3 = user.create_ad title: 'English', text: 'Do you teach beginners?', creating_day: '2015.05.04'
+      Ad.created_last_week.equal_items?([ad3]).should be_truthy
+    end
+  end
 end

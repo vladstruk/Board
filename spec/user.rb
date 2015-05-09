@@ -38,7 +38,7 @@ describe User do
       user.update date_of_birth: '2003.05.14', phone_number: 1234
       changed_user = User.find_by_id(user.id)
 
-      user.change_database_values?(changed_user, ["date_of_birth", "phone_number"]).should be_truthy
+      user.changed_database_values?(changed_user, ["date_of_birth", "phone_number"]).should be_truthy
     end
   end
 
@@ -70,8 +70,8 @@ describe User do
   describe "#create_ad" do
     it "should create id" do
       user.save
-      ad = user.create_ad(title: 'English', text: 'Do you work with beginners?')
-      added_ad = client.query("SELECT * FROM advertisements ORDER BY id DESC LIMIT 1").to_a
+      ad = user.create_ad title: 'English', text: 'Do you work with beginners?', creating_day: '2014.02.15'
+      added_ad = client.query("SELECT * FROM ads ORDER BY id DESC LIMIT 1").to_a
       added_ad[0].equal_values?(ad).should == true
     end
   end

@@ -29,4 +29,5 @@ class Hash
   def equal_values? obj
     all? {|k, v| v == obj.send(k)}
   end
+
 end

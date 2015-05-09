@@ -8,15 +8,6 @@ require '~/Desktop/ruby/board_db/lib/database_methods'
 class User
   include DatabaseMethods
 
-  
-  def self.client
-    @@client ||= Mysql2::Client.new(:host => "localhost", :username => "root", :database => "board")
-  end
-
-  def client
-    self.class.client
-  end
-
   def initialize data
     data.symbolize_keys!
     @id = data[:id]
@@ -25,11 +16,22 @@ class User
     @phone_number = data[:phone_number]
   end
 
+  def self.table_name
+    "users"
+  end
+
   def self.database_attrs
     return @@database_attrs if defined? @@database_attrs   
-
     fields = client.query("DESC users").to_a
     @@database_attrs = fields.map {|obj| obj["Field"]}
+  end
+
+  def date_parser data
+    if data.is_a? String
+      Date.strptime(data, "%Y.%m.%d")
+     else
+      data
+    end
   end
 
   def name
@@ -43,15 +45,6 @@ class User
   def phone_number
     @phone_number
   end
-
-  def date_parser data
-      if data.is_a? String
-        Date.strptime(data, "%Y.%m.%d")
-       else
-        data
-      end
-  end
-
 
 
   def save
@@ -84,15 +77,10 @@ class User
     all_users = users.map {|data| User.new(data)}
   end
 
-  def self.find_by_id id
-    data = client.query("SELECT * FROM users WHERE id = #{id}").to_a
-    User.new(data[0])
-  end
-
   def create_ad params
-    client.query("INSERT INTO advertisements (title, text, user_id)
-                    VALUES ('#{params[:title]}', '#{params[:text]}', '#{id}')")
-    Ad.new({id: User.client.last_id, title: params[:title], text: params[:text], user_id: id})
+    client.query("INSERT INTO ads (title, text, creating_day, user_id)
+                    VALUES ('#{params[:title]}', '#{params[:text]}', '#{params[:creating_day]}', '#{id}')")
+    Ad.new({id: User.client.last_id, title: params[:title], text: params[:text], creating_day: params[:creating_day], user_id: id})
   end
 
   def self.count
