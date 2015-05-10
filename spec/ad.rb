@@ -11,17 +11,11 @@ describe Ad do
   #TODO check that 'lets' are used more than one time
   let(:saved_user){ user.save }
   let(:saved_obj) { saved_user.create_ad(title: 'English', text: 'Do you teach children?', creating_day: '2015.03.01') }
+  let(:saved_obj2) { saved_user.create_ad(title: 'French', text: 'Do you teach beginners?', creating_day: '2015.04.27') }
+  let(:class_name){ Ad }
 
-  it_behaves_like "database object"
-
-  describe "#update" do
-    it "should update table" do
-      user.save
-      ad = user.create_ad title: 'English', text: 'Do you teach children?', creating_day: '2015.02.01' 
-      ad.update title: 'French', text: 'Do you teach beginners?'
-      changed_ad = Ad.find_by_id(ad.id)
-      ad.changed_database_values?(changed_ad, ["title", "text"]).should be_truthy
-    end
+  it_behaves_like "database object" do
+    let(:update_params){ {title: 'French', text: 'Do you teach beginners?'} }
   end
 
   describe ".sort_by_fields" do

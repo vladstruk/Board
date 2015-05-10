@@ -1,4 +1,4 @@
-shared_examples_for "database object" do
+shared_examples_for "database object" do 
 
   describe ".find_by_id" do
     it "should find object" do
@@ -13,6 +13,24 @@ shared_examples_for "database object" do
       client.query("SELECT * FROM #{table_name} WHERE id = #{saved_obj.id}").count.should == 1
       saved_obj.delete
       client.query("SELECT * FROM #{table_name} WHERE id = #{saved_obj.id}").count.should be_zero
+    end
+  end
+
+  describe "#update" do
+    it "should update table" do
+      saved_obj.update update_params
+      changed_obj = saved_obj.class.find_by_id(saved_obj.id)
+      saved_obj.changed_database_values?(changed_obj, update_params.keys).should be_truthy
+    end
+  end
+
+  describe ".count" do
+    it "should return number of objects" do
+      client.query("DELETE FROM #{class_name.table_name}")
+      class_name.count.should be_zero
+      saved_obj
+      saved_obj2
+      class_name.count.should == 2
     end
   end
 

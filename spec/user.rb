@@ -8,9 +8,14 @@ describe User do
   let(:client) { Mysql2::Client.new(:host => "localhost", :username => "root", :database => "board") }
   let(:user) { User.new({name: 'Smith', date_of_birth: '1995.12.01', phone_number: 124578}) }
   let(:user2) { User.new({name: 'Johnson', date_of_birth: '1989.11.05', phone_number: 986532}) }
+  #TODO check that 'lets' are used more than one time
   let(:saved_obj){ user.save }
+  let(:saved_obj2){ user2.save }
+  let(:class_name){ User }
 
-  it_behaves_like "database object"
+  it_behaves_like "database object" do
+    let(:update_params){ {date_of_birth: '2003.05.14', phone_number: 1234} }
+  end
 
   describe "#save" do
     it "should save users" do
@@ -37,24 +42,6 @@ describe User do
     end
   end
 
-  describe "#update" do
-    it "should update table" do
-      user.save
-      user.update date_of_birth: '2003.05.14', phone_number: 1234
-      changed_user = User.find_by_id(user.id)
-      user.changed_database_values?(changed_user, ["date_of_birth", "phone_number"]).should be_truthy
-    end
-  end
-
-  describe "#delete" do
-    it "should delete row by attribute" do
-      user.save
-      client.query("SELECT * FROM users WHERE id = #{user.id}").count.should == 1
-      user.delete
-      client.query("SELECT * FROM users WHERE id = #{user.id}").count.should be_zero
-    end
-  end
-
   describe ".all" do
     it "should return all table data" do
       client.query("DELETE FROM users")
@@ -70,16 +57,6 @@ describe User do
       ad = user.create_ad title: 'English', text: 'Do you work with beginners?', creating_day: '2014.02.15'
       added_ad = client.query("SELECT * FROM ads ORDER BY id DESC LIMIT 1").to_a
       added_ad[0].equal_values?(ad).should == true
-    end
-  end
-
-  describe ".count" do
-    it "should return number of users" do
-      client.query("DELETE FROM users")
-      User.count.should be_zero
-      user.save
-      user2.save
-      User.count.should == 2
     end
   end
 

@@ -10,6 +10,11 @@ module DatabaseMethods
   
 
   module ClassMethods
+    def count
+      #@@client.query("SELECT * FROM users").count
+      client.query("SELECT COUNT(*) count FROM #{self.table_name}").to_a[0]['count']
+    end
+
     def find_by_id id
       data = client.query("SELECT * FROM #{self.table_name} WHERE id = #{id}").to_a
       self.new(data[0])
@@ -39,12 +44,18 @@ module DatabaseMethods
   
     def changed_database_values? user, changed_fields
       self.class.database_attrs.all? do |field|
+        field = field.to_sym
         (changed_fields.include?(field) && send(field) != user.send(field)) || send(field) == user.send(field)
       end
     end
 
     def delete
       client.query("DELETE FROM #{self.class.table_name} WHERE id = #{id}")
+    end
+
+    def update params
+      changing_attrs = params.map { |k, v| "#{k} = '#{v}'" }.join(', ')
+      client.query("UPDATE #{self.class.table_name} SET #{changing_attrs} WHERE id = #{id} ")
     end
 
   end  
