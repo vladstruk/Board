@@ -4,9 +4,13 @@ require '~/Desktop/ruby/board_db/user'
 require '~/Desktop/ruby/board_db/spec/shared_examples/database_methods'
 
 describe User do
+  
   let(:client) { Mysql2::Client.new(:host => "localhost", :username => "root", :database => "board") }
   let(:user) { User.new({name: 'Smith', date_of_birth: '1995.12.01', phone_number: 124578}) }
   let(:user2) { User.new({name: 'Johnson', date_of_birth: '1989.11.05', phone_number: 986532}) }
+  let(:saved_obj){ user.save }
+
+  it_behaves_like "database object"
 
   describe "#save" do
     it "should save users" do
@@ -89,10 +93,4 @@ describe User do
     end
   end
 
-  describe "User" do
-    #saved_user = User.new(name: 'Smith', date_of_birth: '1995.12.01', phone_number: 124578).save
-    #it_behaves_like "database object", saved_user
-    let(:obj){ user.save }
-    it_behaves_like "database object"
-  end
 end

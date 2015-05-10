@@ -8,6 +8,11 @@ describe Ad do
 
   let(:client) { Mysql2::Client.new(:host => "localhost", :username => "root", :database => "board") }
   let(:user) { User.new({name: 'Smith', date_of_birth: '1995.12.01', phone_number: 124578}) }
+  #TODO check that 'lets' are used more than one time
+  let(:saved_user){ user.save }
+  let(:saved_obj) { saved_user.create_ad(title: 'English', text: 'Do you teach children?', creating_day: '2015.03.01') }
+
+  it_behaves_like "database object"
 
   describe "#update" do
     it "should update table" do
@@ -39,11 +44,6 @@ describe Ad do
       ad3 = user.create_ad title: 'English', text: 'Do you teach beginners?', creating_day: '2015.05.04'
       Ad.created_last_week.equal_items?([ad3]).should be_truthy
     end
-  end
-
-  describe "Ad" do
-    let(:saved_user){ user.save }
-    let(:obj) { saved_user.create_ad title: 'English', text: 'Do you teach children?', creating_day: '2015.03.01' }
-    it_behaves_like "database object"
-  end
+  end  
+    
 end

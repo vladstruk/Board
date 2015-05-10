@@ -28,6 +28,7 @@ module DatabaseMethods
 
   
   module InstanceMethods
+
     def client
       self.class.client
     end
@@ -41,5 +42,10 @@ module DatabaseMethods
         (changed_fields.include?(field) && send(field) != user.send(field)) || send(field) == user.send(field)
       end
     end
+
+    def delete
+      client.query("DELETE FROM #{self.class.table_name} WHERE id = #{id}")
+    end
+
   end  
 end
