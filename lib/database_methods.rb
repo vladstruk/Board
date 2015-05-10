@@ -10,6 +10,16 @@ module DatabaseMethods
   
 
   module ClassMethods
+    def sort_by_fields fields
+      objects = client.query("SELECT * FROM #{self.table_name} ORDER BY #{fields.join(', ')}").to_a
+      objects.map { |obj| self.new(obj) }
+    end
+
+    def all
+      objects = client.query("SELECT * FROM #{self.table_name}").to_a
+      objects.map {|data| self.new(data)}
+    end
+
     def count
       #@@client.query("SELECT * FROM users").count
       client.query("SELECT COUNT(*) count FROM #{self.table_name}").to_a[0]['count']

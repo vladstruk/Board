@@ -30,7 +30,26 @@ shared_examples_for "database object" do
       class_name.count.should be_zero
       saved_obj
       saved_obj2
-      class_name.count.should == 2
+      saved_obj.class.count.should == 2
+    end
+  end
+
+  describe ".all" do
+    it "should return all table data" do
+      client.query("DELETE FROM #{class_name.table_name}")
+      saved_obj
+      saved_obj2
+      saved_obj.class.all.map(&:id).should == [saved_obj.id, saved_obj2.id]
+    end
+  end
+
+  describe ".sort_by_fields" do
+    it "should return objects sorted by fields" do
+      client.query("DELETE FROM #{class_name.table_name}")
+      saved_obj
+      saved_obj2
+      saved_obj3
+      saved_obj.class.sort_by_fields(sorting_fields).equal_items?([saved_obj3, saved_obj, saved_obj2]).should be_truthy
     end
   end
 
