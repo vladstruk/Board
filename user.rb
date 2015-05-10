@@ -46,13 +46,6 @@ class User
     !@id.nil?
   end
 
-  def update params
-    #changed_attrs = params.map { |k, v| "#{k} = '#{v}'" }.join(', ')
-    changed_attrs = []
-    params.each { |k, v| changed_attrs.push "#{k} = '#{v}'" }
-    client.query("UPDATE users SET #{changed_attrs.join(', ')} WHERE id = #{id}")
-  end
-
   def create_ad params
     client.query("INSERT INTO ads (title, text, creating_day, user_id)
                     VALUES ('#{params[:title]}', '#{params[:text]}', '#{params[:creating_day]}', '#{id}')")
@@ -64,11 +57,6 @@ class User
   def self.all
     users = client.query("SELECT * FROM users").to_a
     all_users = users.map {|data| User.new(data)}
-  end
-
-  def self.count
-    #@@client.query("SELECT * FROM users").count
-    client.query("SELECT COUNT(*) count FROM users").to_a[0]['count']
   end
 
   def self.table_name

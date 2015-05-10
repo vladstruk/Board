@@ -39,12 +39,6 @@ class Ad
   end
 
 
-  def update params
-    changing_attrs = params.map { |k, v| "#{k} = '#{v}'" }.join(', ')
-    client.query("UPDATE ads SET #{changing_attrs} WHERE id = #{id} ")
-  end
-
-
     #Class methods
   def self.sort_by_fields fields
     ads = client.query("SELECT * FROM ads ORDER BY #{fields.join(', ')}").to_a
@@ -61,6 +55,7 @@ class Ad
   end
 
 end
+
 
 
 
