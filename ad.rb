@@ -40,11 +40,6 @@ class Ad
 
 
     #Class methods
-  def self.sort_by_fields fields
-    ads = client.query("SELECT * FROM ads ORDER BY #{fields.join(', ')}").to_a
-    ads.map { |ad| Ad.new(ad) }
-  end
-
   def self.created_last_week
     ads = client.query("SELECT * FROM ads WHERE DATEDIFF(CURRENT_DATE, creating_day) <= 7").to_a
     ads.map {|ad| Ad.new(ad)}

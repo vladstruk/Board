@@ -54,11 +54,6 @@ class User
 
    
     #Class methods
-  def self.all
-    users = client.query("SELECT * FROM users").to_a
-    all_users = users.map {|data| User.new(data)}
-  end
-
   def self.table_name
     "users"
   end
