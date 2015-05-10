@@ -2,6 +2,7 @@ require 'pry'
 
 require '~/Desktop/ruby/board_db/user'
 require '~/Desktop/ruby/board_db/ad'
+require '~/Desktop/ruby/board_db/spec/shared_examples/database_methods'
 
 describe Ad do
 
@@ -38,5 +39,11 @@ describe Ad do
       ad3 = user.create_ad title: 'English', text: 'Do you teach beginners?', creating_day: '2015.05.04'
       Ad.created_last_week.equal_items?([ad3]).should be_truthy
     end
+  end
+
+  describe "Ad" do
+    let(:saved_user){ user.save }
+    let(:obj) { saved_user.create_ad title: 'English', text: 'Do you teach children?', creating_day: '2015.03.01' }
+    it_behaves_like "database object"
   end
 end

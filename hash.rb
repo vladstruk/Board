@@ -6,6 +6,10 @@ class Hash
     self
   end
 
+  def equal_values? obj
+    all? {|k, v| v == obj.send(k)}
+  end
+
   #def equal_values? obj
   #	each do |k, v|
   #		if v != obj.send(k)
@@ -24,10 +28,4 @@ class Hash
   #def equal_values? obj
   #	!any? {|k, v| v != obj.send(k)}
   #end
-
-
-  def equal_values? obj
-    all? {|k, v| v == obj.send(k)}
-  end
-
 end

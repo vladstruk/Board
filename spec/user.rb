@@ -1,6 +1,7 @@
 require 'pry'
 
 require '~/Desktop/ruby/board_db/user'
+require '~/Desktop/ruby/board_db/spec/shared_examples/database_methods'
 
 describe User do
   let(:client) { Mysql2::Client.new(:host => "localhost", :username => "root", :database => "board") }
@@ -37,7 +38,6 @@ describe User do
       user.save
       user.update date_of_birth: '2003.05.14', phone_number: 1234
       changed_user = User.find_by_id(user.id)
-
       user.changed_database_values?(changed_user, ["date_of_birth", "phone_number"]).should be_truthy
     end
   end
@@ -57,13 +57,6 @@ describe User do
       user.save
       user2.save
       User.all.map(&:id).should == [user.id, user2.id]
-    end
-  end
-
-  describe ".find_by_id" do
-    it "should return user" do
-      user.save
-      User.find_by_id(user.id).id.should == user.id
     end
   end
 
@@ -89,11 +82,17 @@ describe User do
   describe ".database_attrs" do
     it "should" do
       User.remove_class_variable(:@@database_attrs)
-      client = User.client
-      
+      client = User.client  
       expect(client).to receive(:query).once
       User.database_attrs
       User.database_attrs
     end
+  end
+
+  describe "User" do
+    #saved_user = User.new(name: 'Smith', date_of_birth: '1995.12.01', phone_number: 124578).save
+    #it_behaves_like "database object", saved_user
+    let(:obj){ user.save }
+    it_behaves_like "database object"
   end
 end
