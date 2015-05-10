@@ -30,14 +30,6 @@ class User
     @phone_number
   end
 
-
-  def save
-    client.query("INSERT INTO users (name, date_of_birth, phone_number)
-                      VALUES ('#{name}', '#{date_of_birth}', #{phone_number})")
-    @id = client.last_id
-    self
-  end
-
   def id
     @id
   end
