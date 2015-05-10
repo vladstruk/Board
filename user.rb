@@ -53,10 +53,6 @@ class User
     client.query("UPDATE users SET #{changed_attrs.join(', ')} WHERE id = #{id}")
   end
 
-  def delete
-    client.query("DELETE FROM users WHERE id = #{id}")
-  end
-
   def create_ad params
     client.query("INSERT INTO ads (title, text, creating_day, user_id)
                     VALUES ('#{params[:title]}', '#{params[:text]}', '#{params[:creating_day]}', '#{id}')")
