@@ -53,4 +53,18 @@ shared_examples_for "database object" do
     end
   end
 
+  describe "#save" do
+    it "should save users" do
+      saved_obj
+      reloaded_obj = saved_obj.class.find_by_id(saved_obj.id)
+      saved_obj.equal_database_values?(reloaded_obj).should be_truthy
+    end
+
+    it "should return only one user" do
+      count = class_name.count
+      saved_obj
+      saved_obj.class.count.should == count + 1
+    end
+  end
+
 end

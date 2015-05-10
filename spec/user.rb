@@ -20,20 +20,6 @@ describe User do
     let(:sorting_fields){ [:name, :date_of_birth] }
   end
 
-  describe "#save" do
-    it "should save users" do
-      user.save
-      reloaded_user = User.find_by_id(user.id)
-      user.equal_database_values?(reloaded_user).should be_truthy
-    end
-
-    it "should return only one user" do
-      count = User.count
-      user.save
-      User.count.should == count + 1
-    end
-  end
-
   describe "#saved?" do
     it "should return true if object is saved" do
       user.save

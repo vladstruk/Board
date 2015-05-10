@@ -68,5 +68,15 @@ module DatabaseMethods
       client.query("UPDATE #{self.class.table_name} SET #{changing_attrs} WHERE id = #{id} ")
     end
 
+    def save
+      fields = self.class.database_attrs
+      fields.delete("id")
+      values = fields.map { |f| "'#{send(f)}'" }
+      client.query("INSERT INTO #{self.class.table_name} (#{fields.join(',')})
+                        VALUES(#{values.join(', ')})")
+      @id = client.last_id
+      self
+    end
+
   end  
 end
