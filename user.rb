@@ -50,4 +50,8 @@ class User
     "users"
   end
 
+  def self.create params
+    User.new(params).save
+  end
+
 end
