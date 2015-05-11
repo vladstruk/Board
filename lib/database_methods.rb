@@ -32,7 +32,11 @@ module DatabaseMethods
 
     def find_by_id id
       data = client.query("SELECT * FROM #{self.table_name} WHERE id = #{id}").to_a
-      self.new(data[0])
+      if data == []
+        return nil
+      else
+        self.new(data[0])
+      end
     end
 
     def database_attrs
