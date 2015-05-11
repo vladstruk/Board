@@ -67,4 +67,23 @@ shared_examples_for "database object" do
     end
   end
 
+  describe ".create" do
+    it "should create object" do
+      created_obj = class_name.create(new_obj_params)
+      obj = class_name.find_by_id(created_obj.id)
+      created_obj.id.should == obj.id
+    end
+  end
+
+  describe "#saved?" do
+    it "should return true if object has id" do
+      obj = class_name.new({id: 1})
+      obj.saved?.should be_truthy
+    end
+    
+    it "should return false if object does not have id" do
+      class_name.new.saved?.should be_falsey
+    end
+  end
+
 end

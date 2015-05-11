@@ -18,17 +18,7 @@ describe User do
   it_behaves_like "database object" do
     let(:update_params){ {date_of_birth: '2003.05.14', phone_number: 1234} }
     let(:sorting_fields){ [:name, :date_of_birth] }
-  end
-
-  describe "#saved?" do
-    it "should return true if object is saved" do
-      user.save
-      user.saved?.should be_truthy
-    end
-
-    it "should return false if object is not saved" do
-      user.saved?.should be_falsey
-    end
+    let(:new_obj_params){ {name: 'Johnson', date_of_birth: '1989.11.05', phone_number: 986532} }
   end
 
   describe "#create_ad" do
@@ -47,13 +37,6 @@ describe User do
       expect(client).to receive(:query).once
       User.database_attrs
       User.database_attrs
-    end
-  end
-
-  describe ".create" do
-    it "should create object" do
-      user = User.create(name: 'Donaldson', date_of_birth: '1989.11.05', phone_number: 986532)
-      user.saved?.should be_truthy
     end
   end
 

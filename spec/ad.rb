@@ -18,6 +18,7 @@ describe Ad do
   it_behaves_like "database object" do
     let(:update_params){ {title: 'French', text: 'Do you teach beginners?'} }
     let(:sorting_fields){ [:title, :text] }
+    let(:new_obj_params){ {title: 'French', text: 'Do you teach beginners?', creating_day: '2015.04.27'} }
   end
 
   describe ".created_last_week" do

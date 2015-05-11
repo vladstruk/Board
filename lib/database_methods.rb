@@ -10,6 +10,11 @@ module DatabaseMethods
   
 
   module ClassMethods
+
+    def create params
+      self.new(params).save
+    end
+
     def sort_by_fields fields
       objects = client.query("SELECT * FROM #{self.table_name} ORDER BY #{fields.join(', ')}").to_a
       objects.map { |obj| self.new(obj) }
@@ -76,6 +81,10 @@ module DatabaseMethods
                         VALUES(#{values.join(', ')})")
       @id = client.last_id
       self
+    end
+
+    def saved?
+      !@id.nil?
     end
 
   end  
