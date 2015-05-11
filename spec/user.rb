@@ -8,14 +8,13 @@ describe User do
   let(:client){ Mysql2::Client.new(:host => "localhost", :username => "root", :database => "board") }
   let(:user){ User.new(name: 'Miller', date_of_birth: '1995.12.01', phone_number: 124578) }
   let(:user2){ User.new(name: 'Smith', date_of_birth: '1989.11.05', phone_number: 986532) }
-  let(:user3){ User.new(name: 'Johnson', date_of_birth: '1989.11.05', phone_number: 986532) }
-  #TODO check that 'lets' are used more than one time
   let(:saved_obj){ user.save }
   let(:saved_obj2){ user2.save }
-  let(:saved_obj3){ user3.save }
   let(:class_name){ User }
 
   it_behaves_like "database object" do
+    let(:user3){ User.new(name: 'Johnson', date_of_birth: '1989.11.05', phone_number: 986532) }
+    let(:saved_obj3){ user3.save }
     let(:update_params){ {date_of_birth: '2003.05.14', phone_number: 1234} }
     let(:sorting_fields){ [:name, :date_of_birth] }
     let(:new_obj_params){ {name: 'Johnson', date_of_birth: '1989.11.05', phone_number: 986532} }
