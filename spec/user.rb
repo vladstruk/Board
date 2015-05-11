@@ -50,4 +50,11 @@ describe User do
     end
   end
 
+  describe ".create" do
+    it "should create object" do
+      user = User.create(name: 'Donaldson', date_of_birth: '1989.11.05', phone_number: 986532)
+      user.saved?.should be_truthy
+    end
+  end
+
 end
