@@ -9,7 +9,7 @@ class Ad
   include DatabaseMethods
   include ParamsHandler
 
-  def initialize data
+  def initialize data = {}
     data.symbolize_keys!
     @id = data[:id]
     @title = data[:title]

@@ -10,7 +10,7 @@ class User
   include DatabaseMethods
   include ParamsHandler
 
-  def initialize data
+  def initialize data = {}
     data.symbolize_keys!
     @id = data[:id]
     @name = data[:name]
@@ -34,10 +34,6 @@ class User
     @id
   end
 
-  def saved?
-    !@id.nil?
-  end
-
   def create_ad params
     client.query("INSERT INTO ads (title, text, creating_day, user_id)
                     VALUES ('#{params[:title]}', '#{params[:text]}', '#{params[:creating_day]}', '#{id}')")
@@ -48,10 +44,6 @@ class User
     #Class methods
   def self.table_name
     "users"
-  end
-
-  def self.create params
-    User.new(params).save
   end
 
 end
