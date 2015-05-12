@@ -12,11 +12,6 @@ shared_examples_for "database object" do
       class_name.find_by_id(obj.id).id.should == obj.id
       obj.delete
       class_name.find_by_id(obj.id).should == nil
-
-      #table_name = saved_obj.class.table_name
-      #client.query("SELECT * FROM #{table_name} WHERE id = #{saved_obj.id}").count.should == 1
-      #saved_obj.delete
-      #client.query("SELECT * FROM #{table_name} WHERE id = #{saved_obj.id}").count.should be_zero
     end
   end
 
