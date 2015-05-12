@@ -16,6 +16,11 @@ class User
     @name = data[:name]
     @date_of_birth = date_parser data[:date_of_birth]
     @phone_number = data[:phone_number]
+    @role = self.class
+  end
+
+  def role
+    @role
   end
 
   def name
@@ -34,10 +39,16 @@ class User
     @id
   end
 
+  def delete_ad ad
+      if ad.user_id == id
+        ad.delete
+      else
+        false
+      end
+  end
+
   def create_ad params
-    client.query("INSERT INTO ads (title, text, creating_day, user_id)
-                    VALUES ('#{params[:title]}', '#{params[:text]}', '#{params[:creating_day]}', '#{id}')")
-    Ad.new({id: User.client.last_id, title: params[:title], text: params[:text], creating_day: params[:creating_day], user_id: id})
+    Ad.create(params.merge(user_id: id))
   end
 
    
